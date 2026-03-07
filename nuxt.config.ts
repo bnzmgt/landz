@@ -3,4 +3,17 @@ export default defineNuxtConfig({
     modules: ["@nuxtjs/tailwindcss", "@nuxt/content"],
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
+    ssr: true,
+
+    nitro: {
+        prerender: {
+            routes: ["/"],
+        },
+    },
+
+    runtimeConfig: {
+        public: {
+            maintenance: false,
+        },
+    },
 });

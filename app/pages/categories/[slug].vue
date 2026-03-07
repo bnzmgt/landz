@@ -14,5 +14,15 @@
 const route = useRoute();
 const slug = route.params.slug;
 
-const { data: products } = await useAsyncData(`category-${slug}`, () => queryCollection("products").where("category", "=", slug).all());
+const { data: category } = await useAsyncData(`category-${slug}`, () => queryCollection("categories").where("slug", "=", slug).first());
+
+const { data: products } = await useAsyncData(`category-products-${slug}`, () => queryCollection("products").where("category", "=", slug).all());
+
+useSeoMeta({
+    title: () => category.value?.title,
+    description: () => category.value?.description,
+    ogTitle: () => category.value?.title,
+    ogDescription: () => category.value?.description,
+    ogImage: () => category.value?.image,
+});
 </script>

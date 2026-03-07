@@ -24,4 +24,31 @@
 const route = useRoute();
 
 const { data: product } = await useAsyncData(`product-${route.params.slug}`, () => queryCollection("products").path(`/products/${route.params.slug}`).first());
+useSeoMeta({
+    title: () => product.value?.title,
+    description: () => `Harga dan review ${product.value?.title}`,
+    ogTitle: () => product.value?.title,
+    ogDescription: () => `Harga dan review ${product.value?.title}`,
+    ogImage: () => product.value?.image,
+});
+
+useHead({
+    script: [
+        {
+            type: "application/ld+json",
+            children: () =>
+                JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Product",
+                    name: product.value?.title,
+                    image: product.value?.image,
+                    offers: {
+                        "@type": "Offer",
+                        price: product.value?.price,
+                        priceCurrency: "IDR",
+                    },
+                }),
+        },
+    ],
+});
 </script>

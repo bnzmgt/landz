@@ -24,6 +24,7 @@ export default defineContentConfig({
             schema: z.object({
                 title: z.string(),
                 slug: z.string(),
+                description: z.string(),
                 image: z.string(),
                 count: z.number(),
             }),
