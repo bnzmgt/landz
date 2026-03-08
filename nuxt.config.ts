@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 
     nitro: {
         prerender: {
-            routes: ["/"],
+            crawlLinks: true,
         },
     },
 
@@ -15,5 +15,9 @@ export default defineNuxtConfig({
         public: {
             maintenance: false,
         },
+    },
+
+    experimental: {
+        payloadExtraction: true,
     },
 });
