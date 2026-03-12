@@ -1,12 +1,5 @@
 <template>
-    <div class="max-w-7xl mx-auto px-4 py-12">
-        <!-- HEADER -->
-        <div class="text-center mb-16">
-            <h2 class="text-2xl font-medium tracking-tight mb-2 uppercase">Curated For You</h2>
-
-            <p class="text-gray-500 text-sm italic">Explore a selection thoughtfully tailored to your style and preferences.</p>
-        </div>
-
+    <div class="container mx-auto">
         <!-- HERO -->
         <div class="relative bg-gray-100 h-64 flex items-center justify-center overflow-hidden mb-20">
             <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-60" />
@@ -15,21 +8,25 @@
                 <h3 class="text-xl font-bold uppercase tracking-widest text-white drop-shadow-md">Discover Trending Products</h3>
 
                 <p class="text-white text-xs tracking-wide">Handpicked affiliate products from trusted marketplaces.</p>
-
-                <CTAButton url="https://shopee.co.id" text="Visit Shopee" />
             </div>
         </div>
 
-        <!-- FEATURED PRODUCTS -->
         <section class="mb-20">
             <h2 class="text-xl font-semibold uppercase tracking-widest mb-10">Featured Products</h2>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
-                <ProductCard v-for="product in products" :key="product.slug" :title="product.title" :image="product.image" :price="product.price" :slug="product.slug" :affiliate="product.affiliate" />
+                <ProductCard
+                    v-for="product in products"
+                    :key="product.slug"
+                    :title="product.title"
+                    :image="product.image"
+                    :price="product.price"
+                    :slug="product.slug"
+                    :affiliate="product.affiliate"
+                    :category="product.category" />
             </div>
         </section>
 
-        <!-- CATEGORIES -->
         <section class="mb-20">
             <h2 class="text-xl font-semibold uppercase tracking-widest mb-10">Categories</h2>
 
@@ -38,8 +35,7 @@
             </div>
         </section>
 
-        <!-- REVIEWS -->
-        <section>
+        <section v-if="reviews?.length">
             <h2 class="text-xl font-semibold uppercase tracking-widest mb-10">Latest Reviews</h2>
 
             <div class="grid md:grid-cols-3 gap-6">

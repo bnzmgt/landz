@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GLOBAL STYLE */
+
+body {
+  @apply bg-base-100 text-base-content;
+}
+
+/* container spacing */
+.page-container {
+  @apply container mx-auto px-4;
+}
+
+/* section spacing */
+.section {
+  @apply py-10;
+}
