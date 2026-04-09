@@ -17,12 +17,9 @@ const menuOpen = ref(false);
                 <NuxtLink to="/categories" class="hover:text-gray-400 transition">Categories</NuxtLink>
             </nav>
 
-            <div class="flex-shrink-0 text-center">
-                <NuxtLink to="/" class="text-2xl font-light tracking-[0.3em] uppercase">
-                    Dotuqu
-                    <span class="font-bold">Online</span>
-                </NuxtLink>
-            </div>
+            <NuxtLink to="/" class="flex items-center justify-center">
+                <img src="/dotuquonline_logo.png" alt="Dotuqu Online" class="h-10 w-auto object-contain" />
+            </NuxtLink>
 
             <div class="flex-1 flex justify-end space-x-4">
                 <PhMagnifyingGlass size="20" class="text-gray-600" />

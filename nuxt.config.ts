@@ -21,4 +21,10 @@ export default defineNuxtConfig({
     experimental: {
         payloadExtraction: true,
     },
+
+    routeRules: {
+        "/robots.txt": {
+            headers: { "Content-Type": "text/plain" },
+        },
+    },
 });

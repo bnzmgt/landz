@@ -1,3 +1,22 @@
+<script setup>
+useSeo({
+    title: "Rekomendasi Produk Shopee Terbaik 2026",
+    description: "Temukan rekomendasi produk Shopee terbaik dengan rating tinggi, harga murah, dan review terpercaya.",
+    image: "https://dotuquonline.com/og-cover.jpg",
+    path: "/",
+});
+
+const { data: categories } = await useAsyncData("categories", () => queryCollection("categories").all());
+
+const { data: products } = await useAsyncData("products", async () => {
+    const res = await queryCollection("products").all();
+
+    return res.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)).slice(0, 8);
+});
+
+const { data: reviews } = await useAsyncData("reviews", () => queryCollection("reviews").limit(3).all());
+</script>
+
 <template>
     <div class="container mx-auto">
         <!-- HERO -->
@@ -52,35 +71,3 @@
         </section>
     </div>
 </template>
-
-<script setup>
-const { data: categories } = await useAsyncData("categories", () => queryCollection("categories").all());
-
-const { data: products } = await useAsyncData("products", () => queryCollection("products").limit(6).all());
-
-const { data: reviews } = await useAsyncData("reviews", () => queryCollection("reviews").limit(3).all());
-
-useSeoMeta({
-    title: "Rekomendasi Produk Shopee Terbaik 2026",
-    description: "Temukan rekomendasi produk Shopee terbaik dengan rating tinggi, harga murah, dan review terpercaya.",
-
-    robots: "index, follow",
-
-    ogTitle: "Rekomendasi Produk Shopee Terbaik",
-    ogDescription: "Kumpulan produk terbaik dari Shopee dengan rating tinggi dan harga terbaik.",
-    ogImage: "https://dotuquonline.com/og-cover.jpg",
-
-    ogType: "website",
-
-    twitterCard: "summary_large_image",
-});
-
-useHead({
-    link: [
-        {
-            rel: "canonical",
-            href: "https://dotuquonline.com",
-        },
-    ],
-});
-</script>

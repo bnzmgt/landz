@@ -4,6 +4,44 @@ const route = useRoute();
 
 const { data: product } = await useAsyncData(`product-${route.params.slug}`, () => queryCollection("products").path(`/products/${route.params.slug}`).first());
 
+if (product.value) {
+    const image = product.value.meta?.images?.[0] || product.value.image || "/default.jpg";
+
+    const description = product.value.description?.slice(0, 150) || `Dapatkan ${product.value.title} dengan harga terbaik dan kualitas terjamin.`;
+
+    useSeo({
+        title: `${product.value.title} | Beli Murah & Terpercaya`,
+        description,
+        image,
+        path: `/products/${product.value.slug}`,
+    });
+
+    useHead({
+        script: [
+            {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Product",
+
+                    name: product.value.title,
+                    image: product.value.meta?.images?.length ? product.value.meta.images : [image],
+
+                    description,
+
+                    offers: {
+                        "@type": "Offer",
+                        priceCurrency: "IDR",
+                        price: product.value.price?.replace(/[^\d]/g, "") || "0",
+                        availability: "https://schema.org/InStock",
+                        url: product.value.affiliate,
+                    },
+                }),
+            },
+        ],
+    });
+}
+
 const mainImage = ref(null);
 const galleryImages = computed(() => {
     if (!product.value) return [];

@@ -99,11 +99,18 @@ async function run() {
             const collect = url => {
                 if (!url) return;
 
-                if (url.includes("susercontent.com")) {
-                    const clean = url.split("@")[0];
+                // hanya ambil image produk asli
+                if (!url.includes("susercontent.com/file")) return;
 
-                    images.push(clean);
-                }
+                // skip video (kalau ada yang lolos)
+                if (url.includes(".mp4") || url.includes("vod.susercontent")) return;
+
+                // skip thumbnail kecil
+                if (url.includes("_tn")) return;
+
+                const clean = url.split("@")[0];
+
+                images.push(clean);
             };
 
             collect(img.src);
@@ -111,7 +118,6 @@ async function run() {
             if (img.srcset) {
                 img.srcset.split(",").forEach(s => {
                     const u = s.trim().split(" ")[0];
-
                     collect(u);
                 });
             }
@@ -145,9 +151,13 @@ async function run() {
 
     const image = data.images.length ? data.images[0] : "";
 
+    const now = new Date();
+    const date = new Date().toISOString().split("T")[0];
+
     const md = `---
 title: "${data.title}"
 slug: "${slug}"
+date: "${date}"
 price: "${data.price || ""}"
 category: "${category}"
 categories:
