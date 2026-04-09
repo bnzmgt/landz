@@ -1,6 +1,7 @@
 ---
 title: Naqiyah - Mukena 2in1 Dewasa Layla Series | Mukena Katun Foil Renda Tule Two tone Atasan Bawahan
 slug: naqiyah-mukena-2in1-dewasa-layla-series
+date: "2026-04-08"
 price: Rp 86.331
 image: https://down-id.img.susercontent.com/file/id-11110107-6knag-m5e8oh8iakrc10_cover
 images:

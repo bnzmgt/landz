@@ -1,6 +1,7 @@
 ---
 title: Nayla Hijab - Kerudung Bergo Hamidah All Size Jilbab instan Jersey Premium hijab instan Ped Busa
 slug: nayla-hijab-kerudung-bergo-hamidah
+date: "2026-04-08"
 price: Rp 23.000
 image: https://down-id.img.susercontent.com/file/id-11134207-7rasf-m0xwm3adjahpcd.webp
 affiliate: https://s.shopee.co.id/3B2WOp48WH

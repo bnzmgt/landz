@@ -1,6 +1,7 @@
 ---
 title: "MUKENA SANTORINI POLOS/ MUKENA JUMBO / MUKENA LEBARAN"
 slug: "mukena-santorini-polos-mukena-jumbo-mukena-lebaran"
+date: "2026-04-08"
 price: Rp 105.000
 category: "mukena"
 categories:

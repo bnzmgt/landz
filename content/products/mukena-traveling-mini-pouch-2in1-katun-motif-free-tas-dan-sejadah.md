@@ -1,6 +1,7 @@
 ---
 title: "MUKENA TRAVELING MINI POUCH 2IN1 KATUN MOTIF FREE TAS DAN SEJADAH"
 slug: "mukena-traveling-mini-pouch-2in1-katun-motif-free-tas-dan-sejadah"
+date: "2026-04-08"
 price: Rp 49.500
 category: "mukena-travel"
 categories:
