@@ -27,4 +27,20 @@ export default defineNuxtConfig({
             headers: { "Content-Type": "text/plain" },
         },
     },
+
+    content: {
+        sources: {
+            main: {
+                driver: "fs",
+                base: "content",
+            },
+        },
+    },
+
+    collections: {
+        articles: {
+            type: "page",
+            source: "articles/*.md",
+        },
+    },
 });

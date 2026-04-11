@@ -1,7 +1,8 @@
 <script setup>
+const year = new Date().getFullYear();
 useSeo({
-    title: "Rekomendasi Produk Shopee Terbaik 2026",
-    description: "Temukan rekomendasi produk Shopee terbaik dengan rating tinggi, harga murah, dan review terpercaya.",
+    title: `Rekomendasi Produk Terbaik ${year} | Murah & Berkualitas`,
+    description: `Temukan rekomendasi produk Shopee terbaik ${year} dengan rating tinggi, harga murah, dan review terpercaya.`,
     image: "https://dotuquonline.com/og-cover.jpg",
     path: "/",
 });
@@ -15,6 +16,8 @@ const { data: products } = await useAsyncData("products", async () => {
 });
 
 const { data: reviews } = await useAsyncData("reviews", () => queryCollection("reviews").limit(3).all());
+
+const { getFeaturedArticles } = useArticles();
 </script>
 
 <template>
@@ -43,6 +46,37 @@ const { data: reviews } = await useAsyncData("reviews", () => queryCollection("r
                     :slug="product.slug"
                     :affiliate="product.affiliate"
                     :category="product.category" />
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <!-- WRAPPER -->
+            <div class="flex flex-col md:flex-row gap-10">
+                <!-- LEFT (40%) -->
+                <div class="md:w-[30%] space-y-6">
+                    <h2 class="text-xl font-semibold uppercase tracking-widest">Featured Products</h2>
+
+                    <p class="text-sm text-gray-500 leading-relaxed">
+                        Temukan produk pilihan terbaik yang sudah kami kurasi khusus untuk kamu. Update setiap hari dengan harga terbaik dari marketplace terpercaya.
+                    </p>
+
+                    <a href="https://shopee.co.id" target="_blank" class="inline-block bg-black text-white text-xs font-bold px-6 py-3 uppercase tracking-widest hover:bg-gray-800 transition">
+                        Explore All Products
+                    </a>
+                </div>
+
+                <!-- RIGHT (60%) -->
+                <div class="md:w-[70%] grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ProductCardList
+                        v-for="product in products"
+                        :key="product.slug"
+                        :title="product.title"
+                        :image="product.image"
+                        :price="product.price"
+                        :slug="product.slug"
+                        :affiliate="product.affiliate"
+                        :category="product.category" />
+                </div>
             </div>
         </section>
 
