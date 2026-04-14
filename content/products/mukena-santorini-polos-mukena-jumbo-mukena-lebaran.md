@@ -8,9 +8,8 @@ categories:
     - "fashion-muslim"
     - "mukena-and-perlengkapan-sholat"
     - "mukena"
-image: "https://down-id.img.susercontent.com/file/id-11110107-6vdvi-metcm1us2ayoe6_cover"
+image: "https://down-id.img.susercontent.com/file/id-11134207-7r98r-lt76aeyrkvn825"
 images:
-    - "https://down-id.img.susercontent.com/file/id-11110107-6vdvi-metcm1us2ayoe6_cover"
     - "https://down-id.img.susercontent.com/file/id-11134207-7r98r-lt76aeyrkvn825"
     - "https://down-id.img.susercontent.com/file/id-11134207-81ztq-meoetuhtcbutca"
     - "https://down-id.img.susercontent.com/file/id-11134207-81ztd-meoetui3eqdh74"

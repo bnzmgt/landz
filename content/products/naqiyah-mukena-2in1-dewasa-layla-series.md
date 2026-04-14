@@ -3,9 +3,8 @@ title: Naqiyah - Mukena 2in1 Dewasa Layla Series | Mukena Katun Foil Renda Tule 
 slug: naqiyah-mukena-2in1-dewasa-layla-series
 date: "2026-04-08"
 price: Rp 86.331
-image: https://down-id.img.susercontent.com/file/id-11110107-6knag-m5e8oh8iakrc10_cover
+image: "https://down-id.img.susercontent.com/file/id-11134207-7ras8-m3glbvibp40vb4"
 images:
-    - "https://down-id.img.susercontent.com/file/id-11110107-6knag-m5e8oh8iakrc10_cover"
     - "https://down-id.img.susercontent.com/file/id-11134207-7ras8-m3glbvibp40vb4"
     - "https://down-id.img.susercontent.com/file/id-11134207-7ras9-m3glbvibqilb4e"
     - "https://down-id.img.susercontent.com/file/id-11134207-7rasi-m3glbvibtbq770"
@@ -18,7 +17,7 @@ images:
     - "https://down-id.img.susercontent.com/file/id-11134207-7rbke-m93t43lrn0g2e9"
     - "https://down-id.img.susercontent.com/file/id-11134233-7rasc-m0lxdji8b98e95"
 affiliate: https://s.shopee.co.id/1BHS2BFJxv
-category: busana-muslim
+category: mukena
 ---
 
 Mukena Dewaa 2in1 Layla Series adalah mukena yang terbuat dari bahan katun foil renda tuleu two tone yang memberikan kesan elegan dan mewah pada mukena. Mukena ini memiliki desain 2in1 yang dapat digunakan sebagai atasan dan bawahan sehingga lebih praktis dan efisien.

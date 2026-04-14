@@ -3,7 +3,7 @@ title: "TALLY Bra JUMBO Tanpa Kawat Busa Tipis Bahan Katun Cup C Kait 3 T-Shirt 
 slug: "tally-bra-jumbo-tanpa-kawat-busa-tipis-bahan-katun-cup-c-kait-3-t-shirt-bra-big-size-bh-9580-2955-sarwendah"
 date: "2026-04-09"
 price: "Rp74.998 - Rp80.999"
-category: "bra"
+category: "pakaian-dalam"
 categories:
     - "pakaian-wanita"
     - "pakaian-dalam"

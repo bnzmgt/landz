@@ -3,7 +3,7 @@ title: "GRENEY-Gbras-Bra Jumbo Big Size Desain Cup Pijat Tanpa kawat Push Up Sea
 slug: "greney-gbras-bra-jumbo-big-size-desain-cup-pijat-tanpa-kawat-push-up-seamless-bra-cup-tipis-desain-partikel-pijat-pd-89849"
 date: "2026-04-09"
 price: "Rp126.999 - Rp129.900"
-category: "bra"
+category: "pakaian-dalam"
 categories:
     - "pakaian-wanita"
     - "pakaian-dalam"

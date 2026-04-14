@@ -2,15 +2,14 @@
 title: "URU Bra jumbo Big V Renda Seamless bh wanita lite bra push up ringan pakaian Lebar Tanpa Kawat"
 slug: "uru-bra-jumbo-big-v-renda-seamless-bh-wanita-lite-bra-push-up-ringan-pakaian-lebar-tanpa-kawat"
 date: "2026-04-09"
-price: "Rp126.999 - Rp129.900"
-category: "bra"
+price: "Rp129.334"
+category: "pakaian-dalam"
 categories:
     - "pakaian-wanita"
     - "pakaian-dalam"
     - "bra"
-image: "https://down-id.img.susercontent.com/file/id-11110105-6vdvj-mhaburp78zd997_cover"
+image: "https://down-id.img.susercontent.com/file/sg-11134201-821d3-mha9dgqmwo3u0f"
 images:
-    - "https://down-id.img.susercontent.com/file/id-11110105-6vdvj-mhaburp78zd997_cover"
     - "https://down-id.img.susercontent.com/file/id-11134207-8224x-mhaa7zglucjx97"
     - "https://down-id.img.susercontent.com/file/id-11134207-82250-mhaa7zglsxzh52"
     - "https://down-id.img.susercontent.com/file/sg-11134201-821d3-mha9dgqmwo3u0f"

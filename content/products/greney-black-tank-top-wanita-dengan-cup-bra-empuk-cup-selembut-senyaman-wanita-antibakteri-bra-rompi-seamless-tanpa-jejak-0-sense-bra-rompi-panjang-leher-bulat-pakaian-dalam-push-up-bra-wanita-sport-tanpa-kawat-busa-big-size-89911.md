@@ -3,12 +3,12 @@ title: "GRENEY-Black Tank Top Wanita Dengan Cup Bra Empuk Cup Selembut senyaman 
 slug: "greney-black-tank-top-wanita-dengan-cup-bra-empuk-cup-selembut-senyaman-wanita-antibakteri-bra-rompi-seamless-tanpa-jejak-0-sense-bra-rompi-panjang-leher-bulat-pakaian-dalam-push-up-bra-wanita-sport-tanpa-kawat-busa-big-size-89911"
 date: "2026-04-09"
 price: "Rp79.900"
-category: "bra"
+category: "pakaian-dalam"
 categories:
     - "pakaian-wanita"
     - "atasan"
     - "tanktop-and-kamisol"
-image: "https://down-id.img.susercontent.com/file/id-11134207-7ra0m-md18hk6c1krn4e"
+image: "https://down-id.img.susercontent.com/file/id-11134207-8224t-mglyonz4apl485"
 images:
     - "https://down-id.img.susercontent.com/file/id-11134207-8224t-mglyonz4apl485"
     - "https://down-id.img.susercontent.com/file/id-11134207-7ra0o-md18hk6ch10j3f"
