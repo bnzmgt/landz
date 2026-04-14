@@ -181,7 +181,7 @@ const pakaianDalamProducts = computed(() => {
           </div>
 
           <NuxtLink
-            to="/categories/bra"
+            to="/categories/pakaian-dalam"
             class="inline-block bg-black text-white text-xs font-bold px-6 py-3 uppercase tracking-widest hover:bg-gray-800 transition"
           >
             Explore All Products
