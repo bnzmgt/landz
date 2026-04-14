@@ -28,19 +28,4 @@ export default defineNuxtConfig({
         },
     },
 
-    content: {
-        sources: {
-            main: {
-                driver: "fs",
-                base: "content",
-            },
-        },
-    },
-
-    collections: {
-        articles: {
-            type: "page",
-            source: "articles/*.md",
-        },
-    },
 });

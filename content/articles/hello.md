@@ -2,9 +2,10 @@
 title: "Judul Artikel"
 slug: "judul-artikel"
 description: "Deskripsi singkat"
-image: "/images/articles/cover.jpg"
+image: "/images/articles/duck.jpg"
 date: "2026-04-10"
 author: "Admin"
+category: "bra"
 tags: ["affiliate", "review"]
 isFeatured: true
 ---

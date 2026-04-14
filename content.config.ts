@@ -34,5 +34,21 @@ export default defineContentConfig({
             type: "page",
             source: "reviews/*.md",
         }),
+
+        articles: defineCollection({
+            type: "page",
+            source: "articles/*.md",
+            schema: z.object({
+                title: z.string(),
+                slug: z.string(),
+                description: z.string().optional(),
+                image: z.string().optional(),
+                date: z.string(),
+                author: z.string(),
+                category: z.string(),
+                tags: z.array(z.string()).optional(),
+                isFeatured: z.boolean().optional(),
+            }),
+        }),
     },
 });
