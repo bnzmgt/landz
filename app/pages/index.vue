@@ -28,9 +28,9 @@ const featuredProducts = computed(() => {
     return products.value.slice(0, 5);
 });
 
-const { data: featured } = await useAsyncData("featured-articles", () => queryCollection("articles").where("isFeatured", "=", true).limit(3).all());
+const { data: featured } = await useAsyncData("featured-articles", () => queryCollection("articles").where("isFeatured", "=", true).limit(2).all());
 
-const { data: braArticle } = await useAsyncData("bra-articles", () => queryCollection("articles").where("category", "=", "bra").limit(3).all());
+const { data: braArticle } = await useAsyncData("bra-articles", () => queryCollection("articles").where("category", "=", "bra").limit(2).all());
 const sortedBraArticle = computed(() => {
     return [...(braArticle.value || [])]
         .sort((a, b) => {
@@ -41,7 +41,7 @@ const sortedBraArticle = computed(() => {
         })
         .slice(0, 3);
 });
-const { data: fashionMuslimArticle } = await useAsyncData("fashion-muslim-articles", () => queryCollection("articles").where("category", "=", "fashion-muslim").limit(3).all());
+const { data: fashionMuslimArticle } = await useAsyncData("fashion-muslim-articles", () => queryCollection("articles").where("category", "=", "fashion-muslim").limit(2).all());
 const sortedFashionMuslimArticle = computed(() => {
     return [...(fashionMuslimArticle.value || [])]
         .sort((a, b) => {
@@ -106,7 +106,7 @@ const pakaianDalamProducts = computed(() => {
             <div class="flex flex-col md:flex-row gap-10">
                 <!-- LEFT (40%) -->
                 <div class="md:w-[30%] space-y-6">
-                    <div>
+                    <div class="space-y-6">
                         <ArticleCard v-for="article in sortedFashionMuslimArticle" :key="article.slug" :article="article" />
                     </div>
 
@@ -136,7 +136,7 @@ const pakaianDalamProducts = computed(() => {
             <div class="flex flex-col md:flex-row gap-10">
                 <!-- LEFT (40%) -->
                 <div class="md:w-[30%] space-y-6">
-                    <div>
+                    <div class="space-y-6">
                         <ArticleCard v-for="article in sortedBraArticle" :key="article.slug" :article="article" />
                     </div>
 

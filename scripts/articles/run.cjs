@@ -1,12 +1,12 @@
 const { getTrends } = require("./trends.cjs");
 const { detectCategory } = require("./category.cjs");
-// const { generateTitle } = require("./title.cjs");
-// const { rewrite } = require("./rewrite.cjs");
+const { detectIntent } = require("./intent.cjs");
+const { analyzeKeyword } = require("./analyze.cjs");
 const { generateMarkdown } = require("./generate.cjs");
 const { saveArticle } = require("./save.cjs");
 const { generateArticle } = require("./ai.cjs");
 
-const keyword = process.argv[2];
+const keyword = process.argv.slice(2).join(" ");
 
 if (!keyword) {
     console.log("Keyword required");
@@ -20,21 +20,30 @@ async function main() {
 
     console.log(trends);
 
-    const trendKeyword = trends[0] || keyword;
+    const trendKeyword = keyword;
 
-    const category = detectCategory(keyword);
+    const category = detectCategory(trendKeyword);
 
-    const aiArticle = await generateArticle(trendKeyword, category);
+    const analysis = await analyzeKeyword(trendKeyword);
+
+    const intent = analysis.intent || detectIntent(trendKeyword);
+
+    console.log(`Category: ${category}`);
+    console.log(`Intent: ${intent}`);
+    console.log("\nANALYSIS:");
+    console.log(JSON.stringify(analysis, null, 2));
+
+    const aiArticle = await generateArticle(trendKeyword, category, intent, analysis);
 
     const cleanArticle = {
-        title: aiArticle.title || trendKeyword,
+        title: aiArticle.title,
 
-        slug: trendKeyword
+        slug: aiArticle.title
             .toLowerCase()
             .replace(/[^a-z0-9\s-]/g, "")
             .replace(/\s+/g, "-"),
 
-        description: aiArticle.excerpt || `Panduan dan informasi tentang ${trendKeyword}.`,
+        description: aiArticle.excerpt,
 
         date: new Date().toISOString().split("T")[0],
 

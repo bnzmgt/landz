@@ -1,6 +1,17 @@
-TITLE: Bra yang Pas, Nyaman Seharian
-EXCERPT: Memilih bra yang tepat bisa jadi tugas yang lumayan membingungkan, tapi dengan cara yang tepat, kamu bisa menemukan ukuran bra yang pas dan nyaman untuk kamu sehari-hari. 
-CONTENT:
+---
+title: "Bra yang Pas, Nyaman Seharian"
+slug: "bra-yang-pas-nyaman-seharian"
+description: "Memilih bra yang tepat bisa jadi tugas yang lumayan membingungkan, tapi dengan cara yang tepat, kamu bisa menemukan ukuran bra yang pas dan nyaman untuk kamu sehari-hari."
+image: "/images/articles/default.jpg"
+date: "2026-05-30"
+author: "Admin"
+relatedProducts: []
+sources: []
+category: "bra"
+tags: ["ukuran bra"]
+published: true
+---
+
 Pernah nggak sih kamu merasa bra yang kamu pakai nggak nyaman? Seperti terlalu ketat atau malah kebesaran, membuat kamu merasa kurang percaya diri sepanjang hari. Masalahnya, kadang kita terlalu malas untuk mencari ukuran bra yang tepat, atau mungkin kita nggak terlalu paham cara memilih ukuran bra yang pas.
 
 Sebelum kita masuk ke cara memilih ukuran bra, ada baiknya kita tau dulu beberapa hal tentang bra. Bra atau beha adalah pakaian dalam yang dipakai wanita untuk menutupi dan menopang payudara. Fungsinya sendiri adalah untuk membuat payudara kita terlihat lebih kencang dan terbentuk, selain itu juga untuk kenyamanan dan keamanan payudara ketika kita beraktivitas. 
