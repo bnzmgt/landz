@@ -21,6 +21,8 @@
     "google-trends-api": "^4.9.2",
     "gray-matter": "^4.0.3",
     "nuxt": "^4.3.1",
+    "openai": "^6.39.1",
+    "rss-parser": "^3.13.0",
     "vue": "^3.5.29",
     "vue-router": "^4.6.4"
   },

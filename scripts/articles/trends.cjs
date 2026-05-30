@@ -6,7 +6,14 @@ async function getTrends(keyword) {
         geo: "ID",
     });
 
-    return JSON.parse(result);
+    const data = JSON.parse(result);
+
+    const queries = data.default.rankedList?.[0]?.rankedKeyword || [];
+
+    return queries
+        .slice(0, 10)
+        .map(item => item.query)
+        .filter(Boolean);
 }
 
 module.exports = {

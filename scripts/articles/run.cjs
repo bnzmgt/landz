@@ -1,10 +1,10 @@
 const { getTrends } = require("./trends.cjs");
-const { searchSources } = require("./search.cjs");
-const { scrape } = require("./scrape.cjs");
-const { cleanText } = require("./clean.cjs");
-const { rewrite } = require("./rewrite.cjs");
+const { detectCategory } = require("./category.cjs");
+// const { generateTitle } = require("./title.cjs");
+// const { rewrite } = require("./rewrite.cjs");
 const { generateMarkdown } = require("./generate.cjs");
 const { saveArticle } = require("./save.cjs");
+const { generateArticle } = require("./ai.cjs");
 
 const keyword = process.argv[2];
 
@@ -18,53 +18,39 @@ async function main() {
 
     const trends = await getTrends(keyword);
 
-    console.log(JSON.stringify(trends, null, 2));
+    console.log(trends);
 
-    console.log("\nSources:\n");
+    const trendKeyword = trends[0] || keyword;
 
-    const sources = await searchSources(keyword);
+    const category = detectCategory(keyword);
 
-    if (sources.length > 0) {
-        console.log("\nScraping first source...\n");
-
-        const article = await scrape(sources[0].url);
-
-        console.log(JSON.stringify(article, null, 2));
-    }
-
-    const article = await scrape(sources[0].url);
-
-    const cleanContent = cleanText(article.content);
-
-    console.log({
-        title: article.title,
-        content: cleanContent,
-    });
+    const aiArticle = await generateArticle(trendKeyword, category);
 
     const cleanArticle = {
-        title: article.title,
-        content: cleanContent,
+        title: aiArticle.title || trendKeyword,
+
+        slug: trendKeyword
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, "")
+            .replace(/\s+/g, "-"),
+
+        description: aiArticle.excerpt || `Panduan dan informasi tentang ${trendKeyword}.`,
+
+        date: new Date().toISOString().split("T")[0],
+
+        tags: [trendKeyword],
+
+        category,
+
+        content: aiArticle.content,
     };
 
-    const draft = await rewrite(cleanArticle);
-
-    console.log("\nDraft Article:\n");
-
-    console.log(draft);
-
     const markdown = generateMarkdown(cleanArticle);
-
-    console.log("\nGenerated Markdown:\n");
-
-    console.log(markdown);
 
     const filepath = saveArticle(cleanArticle.title, markdown);
 
     console.log("\nSaved:\n");
-
     console.log(filepath);
-
-    console.log(JSON.stringify(sources, null, 2));
 }
 
 main();

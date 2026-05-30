@@ -1,14 +1,17 @@
 function generateMarkdown(article) {
     return `---
 title: "${article.title}"
-excerpt: ""
-keywords: []
+slug: "${article.slug}"
+description: "${article.description}"
+image: "/images/articles/default.jpg"
+date: "${article.date}"
+author: "Admin"
 relatedProducts: []
 sources: []
-published: false
+category: "${article.category}"
+tags: ${JSON.stringify(article.tags)}
+published: true
 ---
-
-# ${article.title}
 
 ${article.content}
 `;
