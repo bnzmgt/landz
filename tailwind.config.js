@@ -17,10 +17,13 @@ export default {
                 "primary-light": "#F53D2D",
                 price: "#ee4d2d",
             },
+            fontFamily: {
+                sans: ["Poppins", "sans-serif"],
+            },
         },
     },
 
-    plugins: [require("daisyui"), require("@tailwindcss/line-clamp")],
+    plugins: [require("daisyui"), require("@tailwindcss/line-clamp"), require("@tailwindcss/typography")],
     daisyui: {
         themes: [
             {

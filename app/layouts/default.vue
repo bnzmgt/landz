@@ -4,7 +4,7 @@ const year = new Date().getFullYear();
 
 <template>
     <div data-theme="dotuqu" class="min-h-screen flex flex-col bg-white text-gray-900">
-        <div class="bg-primary text-white text-[10px] tracking-widest uppercase py-2 text-center font-semibold">Gratis Ongkir untuk Pembelian Pertama via Link Affiliate Kami</div>
+        <div class="bg-primary text-white text-[10px] tracking-widest uppercase py-2 text-center font-semibold">Rekomendasi produk dengan tautan afiliasi tanpa biaya tambahan.</div>
 
         <Navbar />
 

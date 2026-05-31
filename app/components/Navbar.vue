@@ -15,6 +15,7 @@ const menuOpen = ref(false);
                 <NuxtLink to="/" class="hover:text-gray-400 transition">Home</NuxtLink>
 
                 <NuxtLink to="/categories" class="hover:text-gray-400 transition">Categories</NuxtLink>
+                <NuxtLink to="/articles" class="hover:text-gray-400 transition">Articles</NuxtLink>
             </nav>
 
             <NuxtLink to="/" class="flex items-center justify-center">

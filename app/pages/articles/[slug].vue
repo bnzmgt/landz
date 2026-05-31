@@ -36,19 +36,18 @@ useHead({
 
 <template>
     <div class="max-w-3xl mx-auto p-6" v-if="article">
-        <img v-if="article.image" :src="article.image" :alt="article.title" class="w-full h-64 object-cover rounded-xl mb-6" />
+        <img v-if="article.image" :src="article.image" :alt="article.title" class="w-full h-auto object-cover rounded-xl mb-6" />
 
         <h1 class="text-3xl font-bold mb-2">
             {{ article.title }}
         </h1>
 
-        <p class="text-sm text-gray-500 mb-6">{{ article.date }} • {{ article.author }}</p>
+        <p class="text-sm text-gray-500 mb-6">by {{ article.author }} • {{ article.date }}</p>
 
         <div class="prose max-w-none">
             <ContentRenderer :value="article" />
         </div>
 
-        <!-- RELATED PRODUCTS -->
         <section v-if="relatedProducts?.length" class="mt-12 border-t pt-8">
             <h2 class="text-2xl font-semibold mb-6">Produk Terkait</h2>
 
@@ -61,11 +60,11 @@ useHead({
                             {{ product.title }}
                         </h3>
 
-                        <p class="text-primary font-semibold mt-2">
+                        <p class="text-primary text-xs font-semibold mt-2">
                             {{ product.price }}
                         </p>
 
-                        <a :href="product.affiliate" target="_blank" rel="nofollow sponsored" class="btn btn-primary btn-sm w-full mt-3">Lihat Produk</a>
+                        <a :href="product.affiliate" target="_blank" rel="nofollow sponsored" class="btn bg-primary hover:bg-primary-light text-white w-full text-sm mt-3">Lihat Produk</a>
                     </div>
                 </div>
             </div>

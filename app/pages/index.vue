@@ -30,7 +30,7 @@ const featuredProducts = computed(() => {
 
 const { data: featured } = await useAsyncData("featured-articles", () => queryCollection("articles").where("isFeatured", "=", true).limit(2).all());
 
-const { data: braArticle } = await useAsyncData("bra-articles", () => queryCollection("articles").where("category", "=", "bra").limit(2).all());
+const { data: braArticle } = await useAsyncData("bra-articles", () => queryCollection("articles").where("category", "=", "pakaian-dalam").limit(2).all());
 const sortedBraArticle = computed(() => {
     return [...(braArticle.value || [])]
         .sort((a, b) => {
@@ -77,7 +77,7 @@ const pakaianDalamProducts = computed(() => {
         </div>
 
         <section class="mb-20">
-            <h2 class="text-xl font-semibold uppercase tracking-widest mb-10">Categories</h2>
+            <h2 class="text-xl font-semibold uppercase tracking-normal mb-10">Categories</h2>
 
             <div class="grid grid-cols-2 md:grid-cols-6 gap-2">
                 <CategoryCard v-for="cat in categories" :key="cat.slug" :title="cat.title" :slug="cat.slug" :image="cat.image" :count="cat.count || 0" />
@@ -85,7 +85,7 @@ const pakaianDalamProducts = computed(() => {
         </section>
 
         <section class="mb-20">
-            <h2 class="text-xl font-semibold uppercase tracking-widest mb-10">Featured Products</h2>
+            <h2 class="text-xl font-semibold uppercase tracking-normal mb-10">Featured Products</h2>
 
             <div class="grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-12">
                 <ProductCard
@@ -102,8 +102,8 @@ const pakaianDalamProducts = computed(() => {
 
         <section class="mb-20">
             <!-- WRAPPER -->
-            <h2 class="text-xl font-semibold uppercase tracking-widest">Muslim Wear Essentials</h2>
-            <div class="flex flex-col md:flex-row gap-10">
+            <h2 class="text-xl font-semibold uppercase tracking-normal mb-2">Muslim Wear Essentials</h2>
+            <div class="flex flex-col items-start md:flex-row gap-10">
                 <!-- LEFT (40%) -->
                 <div class="md:w-[30%] space-y-6">
                     <div class="space-y-6">
@@ -132,8 +132,8 @@ const pakaianDalamProducts = computed(() => {
 
         <section class="mb-20">
             <!-- WRAPPER -->
-            <h2 class="text-xl font-semibold uppercase tracking-widest">Your Everyday Confidence</h2>
-            <div class="flex flex-col md:flex-row gap-10">
+            <h2 class="text-xl font-semibold uppercase tracking-normal mb-2">Your Everyday Confidence</h2>
+            <div class="flex flex-col items-start md:flex-row gap-10">
                 <!-- LEFT (40%) -->
                 <div class="md:w-[30%] space-y-6">
                     <div class="space-y-6">
