@@ -1,7 +1,15 @@
 <script setup>
 const route = useRoute();
 
-const { data: article } = await useAsyncData("article", () => queryCollection("articles").where("slug", "=", route.params.slug).first());
+const slug = computed(() => route.params.slug);
+
+const { data: article } = await useAsyncData(
+    () => `article-${slug.value}`,
+    () => queryCollection("articles").where("slug", "=", slug.value).first(),
+    {
+        watch: [slug],
+    }
+);
 
 const { data: relatedProducts } = await useAsyncData(`related-products-${route.params.slug}`, async () => {
     if (!article.value?.category) {
