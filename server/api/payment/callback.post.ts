@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     // If secret key is configured, verify HMAC signature
     if (secretKey && secretKey !== "YOUR_DOKU_SECRET_KEY") {
-        const isValid = verifyDokuSignature({
+        const isValid = await verifyDokuSignature({
             clientId,
             secretKey,
             requestId,

@@ -1,5 +1,3 @@
-import crypto from "node:crypto";
-
 export interface DokuConfig {
     clientId: string;
     secretKey: string;
@@ -38,32 +36,57 @@ export interface DokuCheckoutResponse {
 }
 
 /**
- * Generate DOKU SHA-256 Digest in Base64
+ * Generate DOKU SHA-256 Digest in Base64 using Universal Web Crypto API
  */
-export function generateDokuDigest(bodyString: string): string {
-    return crypto.createHash("sha256").update(bodyString, "utf8").digest("base64");
+export async function generateDokuDigest(bodyString: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(bodyString);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const bytes = new Uint8Array(hashBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
 }
 
 /**
- * Generate DOKU HMAC-SHA256 Signature
+ * Generate DOKU HMAC-SHA256 Signature using Universal Web Crypto API
  */
-export function generateDokuSignature(params: {
+export async function generateDokuSignature(params: {
     clientId: string;
     secretKey: string;
     requestId: string;
     requestTimestamp: string;
     requestTarget: string;
     digest: string;
-}): string {
+}): Promise<string> {
     const component = `Client-Id:${params.clientId}\nRequest-Id:${params.requestId}\nRequest-Timestamp:${params.requestTimestamp}\nRequest-Target:${params.requestTarget}\nDigest:${params.digest}`;
-    const hmac = crypto.createHmac("sha256", params.secretKey).update(component, "utf8").digest("base64");
-    return `HMACSHA256=${hmac}`;
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(params.secretKey);
+    const messageData = encoder.encode(component);
+
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        keyData,
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, messageData);
+    const bytes = new Uint8Array(signatureBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return `HMACSHA256=${btoa(binary)}`;
 }
 
 /**
  * Verify incoming DOKU Webhook Notification Signature
  */
-export function verifyDokuSignature(params: {
+export async function verifyDokuSignature(params: {
     clientId: string;
     secretKey: string;
     requestId: string;
@@ -71,9 +94,9 @@ export function verifyDokuSignature(params: {
     requestTarget: string;
     signature: string;
     rawBody: string;
-}): boolean {
-    const digest = generateDokuDigest(params.rawBody);
-    const expectedSignature = generateDokuSignature({
+}): Promise<boolean> {
+    const digest = await generateDokuDigest(params.rawBody);
+    const expectedSignature = await generateDokuSignature({
         clientId: params.clientId,
         secretKey: params.secretKey,
         requestId: params.requestId,
@@ -137,8 +160,8 @@ export async function createDokuCheckoutSession(
     };
 
     const bodyString = JSON.stringify(payload);
-    const digest = generateDokuDigest(bodyString);
-    const signature = generateDokuSignature({
+    const digest = await generateDokuDigest(bodyString);
+    const signature = await generateDokuSignature({
         clientId: config.clientId,
         secretKey: config.secretKey,
         requestId,
