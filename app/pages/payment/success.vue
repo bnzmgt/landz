@@ -13,6 +13,17 @@ const { data: statusData, refresh, pending } = await useFetch(
 
 const transaction = computed(() => statusData.value?.transaction);
 
+// Guard: If payment is not SUCCESS, redirect to the real status page
+watchEffect(() => {
+    if (transaction.value) {
+        if (transaction.value.paymentStatus === "PENDING") {
+            router.replace(`/payment/pending?invoice=${invoiceNumber.value}`);
+        } else if (transaction.value.paymentStatus === "FAILED" || transaction.value.paymentStatus === "EXPIRED") {
+            router.replace(`/payment/failed?invoice=${invoiceNumber.value}`);
+        }
+    }
+});
+
 const formatCurrency = (val) => {
     return "Rp" + (val || 0).toLocaleString("id-ID");
 };

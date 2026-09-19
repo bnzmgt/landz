@@ -16,13 +16,17 @@ const { data: statusData, refresh, pending } = await useFetch(
 const transaction = computed(() => statusData.value?.transaction);
 const simulating = ref(false);
 
+// Auto redirect to success if payment is already confirmed
+watchEffect(() => {
+    if (transaction.value?.paymentStatus === "SUCCESS") {
+        router.replace(`/payment/success?invoice=${invoiceNumber.value}`);
+    } else if (transaction.value?.paymentStatus === "FAILED" || transaction.value?.paymentStatus === "EXPIRED") {
+        router.replace(`/payment/failed?invoice=${invoiceNumber.value}`);
+    }
+});
+
 const checkStatus = async () => {
     await refresh();
-    if (transaction.value?.paymentStatus === "SUCCESS") {
-        router.push(`/payment/success?invoice=${invoiceNumber.value}`);
-    } else if (transaction.value?.paymentStatus === "FAILED") {
-        router.push(`/payment/failed?invoice=${invoiceNumber.value}`);
-    }
 };
 
 const simulatePayment = async (action) => {
