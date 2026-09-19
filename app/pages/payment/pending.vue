@@ -77,9 +77,19 @@ const formatCurrency = (val) => {
                     <span class="font-semibold text-gray-800 text-right max-w-[200px] truncate">{{ transaction.productName }}</span>
                 </div>
 
+                <div v-if="transaction?.quantity" class="flex justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-500">Jumlah</span>
+                    <span class="font-medium text-gray-800">{{ transaction.quantity }} item</span>
+                </div>
+
                 <div v-if="transaction?.amount" class="flex justify-between border-b border-gray-200 pb-2">
                     <span class="text-gray-500">Total Tagihan</span>
                     <span class="font-bold text-primary">{{ formatCurrency(transaction.amount) }}</span>
+                </div>
+
+                <div v-if="transaction?.customerName" class="flex justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-500">Nama Pembeli</span>
+                    <span class="font-medium text-gray-800">{{ transaction.customerName }}</span>
                 </div>
 
                 <div class="flex justify-between">
@@ -88,8 +98,8 @@ const formatCurrency = (val) => {
                 </div>
             </div>
 
-            <!-- Sandbox / Test Simulation Tools -->
-            <div v-if="isMock || !transaction?.dokuReference?.startsWith('http')" class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left text-xs">
+            <!-- Sandbox / Test Simulation Tools (Only visible in mock mode) -->
+            <div v-if="isMock" class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left text-xs">
                 <p class="font-bold text-amber-900 mb-1 flex items-center gap-1">
                     <PhShieldCheck size="16" /> Mode Sandbox / Mock Testing
                 </p>
@@ -115,10 +125,18 @@ const formatCurrency = (val) => {
             </div>
 
             <div class="space-y-3">
+                <a
+                    v-if="transaction?.dokuPaymentUrl && transaction.dokuPaymentUrl.startsWith('http')"
+                    :href="transaction.dokuPaymentUrl"
+                    class="btn bg-primary hover:bg-primary-hover text-white w-full font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition"
+                >
+                    Lanjutkan Pembayaran di DOKU
+                </a>
+
                 <button
                     @click="checkStatus"
                     :disabled="pending"
-                    class="btn bg-primary hover:bg-primary-hover text-white w-full font-bold flex items-center justify-center gap-2"
+                    class="btn btn-outline w-full font-bold flex items-center justify-center gap-2"
                 >
                     <PhArrowsClockwise size="20" :class="pending ? 'animate-spin' : ''" />
                     Cek Status Pembayaran
