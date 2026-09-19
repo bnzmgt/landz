@@ -13,13 +13,21 @@ const { data: statusData, refresh, pending } = await useFetch(
 
 const transaction = computed(() => statusData.value?.transaction);
 
-// Guard: If payment is not SUCCESS, redirect to the real status page
+// Guard: If payment is not SUCCESS, redirect to the real status page (SSR & Client safe)
+if (transaction.value) {
+    if (transaction.value.paymentStatus === "PENDING") {
+        await navigateTo(`/payment/pending?invoice=${invoiceNumber.value}`, { replace: true });
+    } else if (transaction.value.paymentStatus === "FAILED" || transaction.value.paymentStatus === "EXPIRED") {
+        await navigateTo(`/payment/failed?invoice=${invoiceNumber.value}`, { replace: true });
+    }
+}
+
 watchEffect(() => {
     if (transaction.value) {
         if (transaction.value.paymentStatus === "PENDING") {
-            router.replace(`/payment/pending?invoice=${invoiceNumber.value}`);
+            navigateTo(`/payment/pending?invoice=${invoiceNumber.value}`, { replace: true });
         } else if (transaction.value.paymentStatus === "FAILED" || transaction.value.paymentStatus === "EXPIRED") {
-            router.replace(`/payment/failed?invoice=${invoiceNumber.value}`);
+            navigateTo(`/payment/failed?invoice=${invoiceNumber.value}`, { replace: true });
         }
     }
 });

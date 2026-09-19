@@ -17,11 +17,19 @@ const transaction = computed(() => statusData.value?.transaction);
 const simulating = ref(false);
 
 // Auto redirect to success if payment is already confirmed
+if (transaction.value) {
+    if (transaction.value.paymentStatus === "SUCCESS") {
+        await navigateTo(`/payment/success?invoice=${invoiceNumber.value}`, { replace: true });
+    } else if (transaction.value.paymentStatus === "FAILED" || transaction.value.paymentStatus === "EXPIRED") {
+        await navigateTo(`/payment/failed?invoice=${invoiceNumber.value}`, { replace: true });
+    }
+}
+
 watchEffect(() => {
     if (transaction.value?.paymentStatus === "SUCCESS") {
-        router.replace(`/payment/success?invoice=${invoiceNumber.value}`);
+        navigateTo(`/payment/success?invoice=${invoiceNumber.value}`, { replace: true });
     } else if (transaction.value?.paymentStatus === "FAILED" || transaction.value?.paymentStatus === "EXPIRED") {
-        router.replace(`/payment/failed?invoice=${invoiceNumber.value}`);
+        navigateTo(`/payment/failed?invoice=${invoiceNumber.value}`, { replace: true });
     }
 });
 
