@@ -16,7 +16,7 @@ const { data: statusData, refresh, pending } = await useFetch(
 const transaction = computed(() => statusData.value?.transaction);
 const simulating = ref(false);
 
-// Auto redirect to success if payment is already confirmed
+// Auto redirect to appropriate page based on payment status (SSR & Client safe)
 if (transaction.value) {
     if (transaction.value.paymentStatus === "SUCCESS") {
         await navigateTo(`/payment/success?invoice=${invoiceNumber.value}`, { replace: true });
@@ -35,6 +35,11 @@ watchEffect(() => {
 
 const checkStatus = async () => {
     await refresh();
+    if (transaction.value?.paymentStatus === "SUCCESS") {
+        await navigateTo(`/payment/success?invoice=${invoiceNumber.value}`, { replace: true });
+    } else if (transaction.value?.paymentStatus === "FAILED" || transaction.value?.paymentStatus === "EXPIRED") {
+        await navigateTo(`/payment/failed?invoice=${invoiceNumber.value}`, { replace: true });
+    }
 };
 
 const simulatePayment = async (action) => {
@@ -94,7 +99,16 @@ const formatCurrency = (val) => {
 
                 <div class="flex justify-between">
                     <span class="text-gray-500">Status Saat Ini</span>
-                    <span class="badge badge-warning text-white font-semibold">PENDING</span>
+                    <span
+                        class="badge text-white font-semibold"
+                        :class="{
+                            'badge-warning': (transaction?.paymentStatus || 'PENDING') === 'PENDING',
+                            'badge-success': transaction?.paymentStatus === 'SUCCESS',
+                            'badge-error': transaction?.paymentStatus === 'FAILED' || transaction?.paymentStatus === 'EXPIRED'
+                        }"
+                    >
+                        {{ transaction?.paymentStatus || 'PENDING' }}
+                    </span>
                 </div>
             </div>
 

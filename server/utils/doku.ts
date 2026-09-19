@@ -228,3 +228,116 @@ export async function createDokuCheckoutSession(
         };
     }
 }
+
+/**
+ * Generate DOKU HMAC-SHA256 Signature for GET requests (without Digest)
+ */
+export async function generateDokuGetSignature(params: {
+    clientId: string;
+    secretKey: string;
+    requestId: string;
+    requestTimestamp: string;
+    requestTarget: string;
+}): Promise<string> {
+    const component = `Client-Id:${params.clientId}\nRequest-Id:${params.requestId}\nRequest-Timestamp:${params.requestTimestamp}\nRequest-Target:${params.requestTarget}`;
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(params.secretKey);
+    const messageData = encoder.encode(component);
+
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        keyData,
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, messageData);
+    const bytes = new Uint8Array(signatureBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return `HMACSHA256=${btoa(binary)}`;
+}
+
+/**
+ * Check real-time order status directly from DOKU API
+ */
+export async function checkDokuOrderStatus(
+    config: DokuConfig,
+    invoiceNumber: string
+): Promise<{
+    status: "PENDING" | "SUCCESS" | "FAILED" | "EXPIRED" | "UNKNOWN";
+    paymentMethod?: string;
+    amount?: number;
+    rawResponse?: any;
+}> {
+    if (!config.clientId || !config.secretKey || config.clientId === "YOUR_DOKU_CLIENT_ID") {
+        return { status: "UNKNOWN" };
+    }
+
+    const baseUrl = getDokuBaseUrl(config.environment);
+    const requestTarget = `/orders/v1/status/${invoiceNumber}`;
+    const requestId = `REQ-STATUS-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const requestTimestamp = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+
+    try {
+        const signature = await generateDokuGetSignature({
+            clientId: config.clientId,
+            secretKey: config.secretKey,
+            requestId,
+            requestTimestamp,
+            requestTarget,
+        });
+
+        const response = await $fetch<any>(`${baseUrl}${requestTarget}`, {
+            method: "GET",
+            headers: {
+                "Client-Id": config.clientId,
+                "Request-Id": requestId,
+                "Request-Timestamp": requestTimestamp,
+                Signature: signature,
+            },
+        });
+
+        console.log("[DOKU Status Query Response]:", JSON.stringify(response));
+
+        const rawStatus = (
+            response?.transaction?.status ||
+            response?.status ||
+            response?.order?.status ||
+            response?.response?.transaction?.status ||
+            ""
+        ).toUpperCase();
+
+        const paymentMethod =
+            response?.channel?.id ||
+            response?.payment?.payment_method_type ||
+            response?.transaction?.payment_method ||
+            undefined;
+
+        const amount = response?.order?.amount || response?.transaction?.amount || undefined;
+
+        if (
+            rawStatus === "SUCCESS" ||
+            rawStatus === "COMPLETED" ||
+            rawStatus === "PAID" ||
+            rawStatus === "SETTLEMENT"
+        ) {
+            return { status: "SUCCESS", paymentMethod, amount, rawResponse: response };
+        } else if (rawStatus === "EXPIRED") {
+            return { status: "EXPIRED", paymentMethod, amount, rawResponse: response };
+        } else if (rawStatus === "FAILED" || rawStatus === "REJECTED") {
+            return { status: "FAILED", paymentMethod, amount, rawResponse: response };
+        } else if (rawStatus === "PENDING" || rawStatus === "WAITING") {
+            return { status: "PENDING", paymentMethod, amount, rawResponse: response };
+        }
+
+        return { status: "UNKNOWN", rawResponse: response };
+    } catch (err: any) {
+        console.warn("[DOKU Status Query Error]:", err?.data || err?.message);
+        return { status: "UNKNOWN", rawResponse: err?.data };
+    }
+}
+
