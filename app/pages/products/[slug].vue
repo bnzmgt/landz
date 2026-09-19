@@ -178,12 +178,26 @@ const expanded = ref(false);
           ✔ {{ product.stock || "" }} In Stock, Ready to be shipped!
         </p>
 
-        <a
-          :href="product.affiliate"
-          target="_blank"
-          class="btn bg-primary hover:bg-primary-light text-white btn-lg w-full"
-          >Add to Cart</a
-        >
+        <div class="flex flex-col sm:flex-row gap-3">
+          <NuxtLink
+            v-if="product.slug === 'baju-batik-wanita-modern-single-price-test' || product.isDirectCheckout"
+            :to="`/checkout/${product.slug}`"
+            class="btn bg-primary hover:bg-primary-light text-white btn-lg flex-1 font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2"
+          >
+            Beli Sekarang (DOKU)
+          </NuxtLink>
+
+          <a
+            v-if="product.affiliate"
+            :href="product.affiliate"
+            target="_blank"
+            rel="nofollow sponsored"
+            class="btn btn-lg flex-1 flex items-center justify-center transition"
+            :class="(product.slug === 'baju-batik-wanita-modern-single-price-test' || product.isDirectCheckout) ? 'btn-outline text-gray-700 hover:text-primary' : 'bg-primary hover:bg-primary-light text-white w-full border-none shadow-md hover:shadow-lg'"
+          >
+            {{ (product.slug === 'baju-batik-wanita-modern-single-price-test' || product.isDirectCheckout) ? 'Beli di Marketplace' : 'Beli di Shopee / Marketplace' }}
+          </a>
+        </div>
 
         <div class="mt-8">
           <div

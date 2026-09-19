@@ -13,6 +13,11 @@ export default defineNuxtConfig({
     },
 
     runtimeConfig: {
+        dokuClientId: process.env.DOKU_CLIENT_ID || "",
+        dokuSecretKey: process.env.DOKU_SECRET_KEY || "",
+        dokuEnvironment: process.env.DOKU_ENVIRONMENT || "sandbox",
+        dokuCallbackUrl: process.env.DOKU_CALLBACK_URL || "",
+        dokuReturnUrl: process.env.DOKU_RETURN_URL || "",
         public: {
             maintenance: false,
         },

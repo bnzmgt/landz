@@ -1,7 +1,7 @@
 <script setup>
 import { PhShoppingCart } from "@phosphor-icons/vue";
 
-defineProps({
+const props = defineProps({
     title: String,
     image: String,
     price: String,
