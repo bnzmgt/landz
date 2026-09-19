@@ -13,11 +13,14 @@ export default defineEventHandler(async (event) => {
     const signature = headers["signature"] || "";
     const requestTarget = getRequestPath(event);
 
+    const cfEnv = (event.context as any)?.cloudflare?.env || {};
+    const secretKey = config.dokuSecretKey || cfEnv.DOKU_SECRET_KEY || cfEnv.NUXT_DOKU_SECRET_KEY || process.env.DOKU_SECRET_KEY || "";
+
     // If secret key is configured, verify HMAC signature
-    if (config.dokuSecretKey && config.dokuSecretKey !== "YOUR_DOKU_SECRET_KEY") {
+    if (secretKey && secretKey !== "YOUR_DOKU_SECRET_KEY") {
         const isValid = verifyDokuSignature({
             clientId,
-            secretKey: config.dokuSecretKey,
+            secretKey,
             requestId,
             requestTimestamp,
             requestTarget,

@@ -61,12 +61,14 @@ export default defineEventHandler(async (event) => {
 
     await saveTransaction(initialTransaction);
 
+    const cfEnv = (event.context as any)?.cloudflare?.env || {};
+
     const dokuConfig = {
-        clientId: config.dokuClientId,
-        secretKey: config.dokuSecretKey,
-        environment: config.dokuEnvironment,
-        callbackUrl: config.dokuCallbackUrl,
-        returnUrl: config.dokuReturnUrl || `/payment/success?invoice=${invoiceNumber}`,
+        clientId: config.dokuClientId || cfEnv.DOKU_CLIENT_ID || cfEnv.NUXT_DOKU_CLIENT_ID || process.env.DOKU_CLIENT_ID || "",
+        secretKey: config.dokuSecretKey || cfEnv.DOKU_SECRET_KEY || cfEnv.NUXT_DOKU_SECRET_KEY || process.env.DOKU_SECRET_KEY || "",
+        environment: config.dokuEnvironment || cfEnv.DOKU_ENVIRONMENT || cfEnv.NUXT_DOKU_ENVIRONMENT || process.env.DOKU_ENVIRONMENT || "sandbox",
+        callbackUrl: config.dokuCallbackUrl || cfEnv.DOKU_CALLBACK_URL || cfEnv.NUXT_DOKU_CALLBACK_URL || process.env.DOKU_CALLBACK_URL || "",
+        returnUrl: config.dokuReturnUrl || cfEnv.DOKU_RETURN_URL || cfEnv.NUXT_DOKU_RETURN_URL || process.env.DOKU_RETURN_URL || `/payment/success?invoice=${invoiceNumber}`,
     };
 
     const validEmail = (customerEmail && customerEmail.includes("@"))
