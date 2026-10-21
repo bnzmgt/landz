@@ -3,8 +3,6 @@ import { readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 // Build-time list of content routes so every catalog page is prerendered to static HTML.
-// Prerendered pages do NOT depend on the Cloudflare D1 binding at runtime, which removes
-// the "data hilang / tidak muncul" issue caused by failing server-side content queries.
 const contentRoutes = (dir: string, prefix: string): string[] => {
     const full = join(process.cwd(), "content", dir);
     if (!existsSync(full)) return [];
@@ -20,33 +18,17 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     ssr: true,
 
-    content: {
-        // Explicit D1 binding for runtime (non-prerendered) server queries on Cloudflare.
-        // The Cloudflare Pages project MUST have a D1 database bound with variable name "DB".
-        database: {
-            type: "d1",
-            bindingName: "DB",
-        },
-    },
-
     nitro: {
         preset: "cloudflare-pages",
         cloudflare: {
             pages: {
                 defaultRoutes: false,
+                // Only route /api/* to the Worker function.
+                // All other pages are served directly as ultra-fast static assets from Cloudflare's CDN.
+                // This eliminates the 90s D1 timeout and 524 errors completely.
                 routes: {
-                    include: ["/*"],
-                    exclude: [
-                        "/_nuxt/*",
-                        "/images/*",
-                        "/favicon*",
-                        "/apple-touch-icon*",
-                        "/site.webmanifest",
-                        "/robots.txt",
-                        "/sitemap.xml",
-                        "/dump.*",
-                        "/__nuxt_content/*",
-                    ],
+                    include: ["/api/*"],
+                    exclude: [],
                 },
             },
         },
@@ -57,13 +39,15 @@ export default defineNuxtConfig({
                 "/",
                 "/articles",
                 "/categories",
+                "/payment/success",
+                "/payment/pending",
+                "/payment/failed",
                 ...contentRoutes("products", "/products"),
                 ...contentRoutes("categories", "/categories"),
+                ...contentRoutes("articles", "/articles"),
             ],
         },
-        // Persistent transaction storage (Cloudflare KV). Without this, `useStorage("data")`
-        // is in-memory per worker isolate and transactions disappear randomly.
-        // Requires a KV namespace bound with variable name "TRANSACTIONS".
+        // Persistent transaction storage (Cloudflare KV)
         storage: {
             data: {
                 driver: "cloudflare-kv-binding",
@@ -97,12 +81,11 @@ export default defineNuxtConfig({
         "/robots.txt": {
             headers: { "Content-Type": "text/plain" },
         },
-        // Dynamic routes must never be prerendered or cached
-        "/checkout/**": { prerender: false, headers: { "cache-control": "no-store" } },
-        "/payment/**": { prerender: false, headers: { "cache-control": "no-store" } },
-        "/api/**": { prerender: false, headers: { "cache-control": "no-store" } },
-        "/test-payment": { prerender: false },
-        "/test": { prerender: false },
+        // Render checkout and payment status pages as client-side SPA to avoid any runtime SSR D1 calls
+        "/checkout/**": { ssr: false },
+        "/payment/**": { ssr: false },
+        "/test-payment": { ssr: false },
+        "/test": { ssr: false },
+        "/api/**": { headers: { "cache-control": "no-store" } },
     },
-
 });
