@@ -1,0 +1,46 @@
+{
+  // Cloudflare Worker config for dotuquonline.com (Nuxt 4 + Nitro preset "cloudflare_module")
+  // Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // MUST match the existing Worker name in Workers & Pages, otherwise a new Worker is created
+  "name": "landz",
+
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2025-07-15",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static assets (incl. prerendered HTML for products/categories/articles) served directly
+  "assets": {
+    "directory": "./.output/public",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Nuxt Content runtime database (used by SSR routes like /checkout/[product])
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dotuqu-content",
+      "database_id": "784d64b9-b956-419c-9831-68a36da73eb0"
+    }
+  ],
+
+  // Persistent payment transaction storage (Nitro useStorage("data"))
+  "kv_namespaces": [
+    {
+      "binding": "TRANSACTIONS",
+      "id": "efe5294c796141ffaa7d8559787b095e"
+    }
+  ],
+
+  // Keep dashboard variables (e.g. DOKU_CLIENT_ID) instead of deleting them on deploy
+  "keep_vars": true,
+
+  "vars": {
+    "DOKU_ENVIRONMENT": "production"
+  }
+}

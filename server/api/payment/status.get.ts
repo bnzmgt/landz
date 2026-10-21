@@ -88,8 +88,12 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    // 3. Allow mock/sandbox simulation for local testing
-    if (transaction && action === "simulate_success" && transaction.paymentStatus === "PENDING") {
+    // 3. Allow mock/sandbox simulation for local testing (NEVER in production)
+    const runtimeEnv = cfEnv.DOKU_ENVIRONMENT || cfEnv.NUXT_DOKU_ENVIRONMENT || dokuConfig.environment;
+    const isSandbox = runtimeEnv === "sandbox" && !getRequestHost(event).includes("dotuquonline.com");
+    if (!isSandbox) {
+        // ignore simulate_* actions in production
+    } else if (transaction && action === "simulate_success" && transaction.paymentStatus === "PENDING") {
         transaction = await updateTransactionStatus(transaction.invoiceNumber, "SUCCESS", {
             paymentMethod: "DOKU_SANDBOX_MOCK",
         });

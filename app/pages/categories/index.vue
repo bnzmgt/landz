@@ -1,5 +1,6 @@
 <script setup>
-const { data: categories } = await useAsyncData("categories", async () => {
+// NOTE: unique key — "categories" is already used on the homepage with a different data shape
+const { data: categories } = await useAsyncData("categories-index-with-count", async () => {
     const products = await queryCollection("products").all();
 
     const map = {};

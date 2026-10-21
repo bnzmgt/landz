@@ -2,11 +2,18 @@
 import { PhCaretCircleUp, PhCaretCircleDown } from "@phosphor-icons/vue";
 const route = useRoute();
 
-const { data: product } = await useAsyncData(
+const { data: product, error: productError } = await useAsyncData(
   `product-${route.params.slug}`,
   () =>
     queryCollection("products").path(`/products/${route.params.slug}`).first(),
 );
+
+if (productError.value) {
+  throw createError({ statusCode: 503, statusMessage: "Data produk gagal dimuat", fatal: true });
+}
+if (!product.value) {
+  throw createError({ statusCode: 404, statusMessage: "Produk tidak ditemukan", fatal: true });
+}
 
 if (product.value) {
   const image =
