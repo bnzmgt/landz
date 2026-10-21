@@ -1,0 +1,19 @@
+# Cloudflare Pages configuration for dotuquonline.com (Nuxt 4 + Nitro preset "cloudflare-pages")
+name = "landz"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-07-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Nuxt Content runtime database (used by SSR routes like /checkout/[product])
+[[d1_databases]]
+binding = "DB"
+database_name = "dotuqu-content"
+database_id = "784d64b9-b956-419c-9831-68a36da73eb0"
+
+# Persistent payment transaction storage (Nitro useStorage("data"))
+[[kv_namespaces]]
+binding = "TRANSACTIONS"
+id = "efe5294c796141ffaa7d8559787b095e"
+
+[vars]
+DOKU_ENVIRONMENT = "production"

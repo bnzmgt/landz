@@ -30,12 +30,7 @@ export default defineNuxtConfig({
     },
 
     nitro: {
-        // Deployed as a Cloudflare Worker (Workers & Pages → Worker) with static assets.
-        // Bindings (D1 "DB", KV "TRANSACTIONS") are declared in wrangler.jsonc.
-        preset: "cloudflare_module",
-        cloudflare: {
-            nodeCompat: true,
-        },
+        preset: "cloudflare-pages",
         prerender: {
             crawlLinks: true,
             failOnError: false,
