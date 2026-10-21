@@ -31,6 +31,25 @@ export default defineNuxtConfig({
 
     nitro: {
         preset: "cloudflare-pages",
+        cloudflare: {
+            pages: {
+                defaultRoutes: false,
+                routes: {
+                    include: ["/*"],
+                    exclude: [
+                        "/_nuxt/*",
+                        "/images/*",
+                        "/favicon*",
+                        "/apple-touch-icon*",
+                        "/site.webmanifest",
+                        "/robots.txt",
+                        "/sitemap.xml",
+                        "/dump.*",
+                        "/__nuxt_content/*",
+                    ],
+                },
+            },
+        },
         prerender: {
             crawlLinks: true,
             failOnError: false,
