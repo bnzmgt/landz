@@ -3,13 +3,13 @@
 **Project**: Landz (`dotuquonline.com`)  
 **Target Audience**: QA Tester, Store Operator, Merchant Administrator, Developer  
 **Environment**: Production (`https://dotuquonline.com`)  
-**Last Updated**: 2026-09-19  
+**Last Updated**: 2026-10-22  
 
 ---
 
 ## 1. DOKU Merchant Dashboard Setup (One-Time Configuration)
 
-Before running live production transactions, ensure the DOKU Merchant Back Office is properly configured:
+Before running live production transactions, ensure the DOKU Merchant Back Office and Cloudflare infrastructure are properly configured:
 
 ### 1.1 Webhook Notification URL
 1. Login to **DOKU Back Office / Dashboard** ([https://dashboard.doku.com](https://dashboard.doku.com)).
@@ -31,6 +31,20 @@ Before running live production transactions, ensure the DOKU Merchant Back Offic
    ```
    https://dotuquonline.com/payment/pending
    ```
+
+### 1.3 Cloudflare Pages Bindings & Environment Checklist
+1. **Wrangler Configuration** (`wrangler.toml`):
+   * `pages_build_output_dir = "dist"`
+   * D1 Database Binding: `binding = "DB"`, `database_id = "784d64b9-b956-419c-9831-68a36da73eb0"`
+   * KV Namespace Binding: `binding = "TRANSACTIONS"`, `id = "efe5294c796141ffaa7d8559787b095e"`
+2. **Environment Secrets** (in Cloudflare Pages Project Settings):
+   * `DOKU_ENVIRONMENT = "production"`
+   * `DOKU_CLIENT_ID`
+   * `DOKU_SECRET_KEY`
+3. **Build Environment**:
+   * Enforced via `.nvmrc` & `.node-version` (Node.js v22).
+4. **Latency Verification**:
+   * Verify that `/` and `/products/*` respond in **< 50 ms** without Error 524 timeouts.
 
 ---
 

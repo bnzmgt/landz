@@ -4,7 +4,7 @@
 **Gateway**: DOKU Jokul Checkout API (v1 REST)  
 **Target Architecture**: Cloudflare Pages / Workers Edge Runtime + Nuxt 4 + Nitro Server  
 **Document Type**: Developer Technical Reference & API Contract  
-**Last Updated**: 2026-09-19  
+**Last Updated**: 2026-10-22  
 
 ---
 
@@ -221,17 +221,20 @@ Queries the real-time transaction state for frontend reactive pages.
 
 | Route | Guard Logic & Behavior |
 | :--- | :--- |
-| **`/checkout/[product]`** | Validates product exists in Nuxt Content. Submits form to `/api/payment/create`, receives `paymentUrl`, and redirects the user (`window.location.href = res.paymentUrl`). |
-| **`/payment/pending`** | - Displays invoice summary, amount, customer name, and quantity.<br>- Shows **"Lanjutkan Pembayaran di DOKU"** link if invoice is not completed.<br>- Auto-redirects to `/payment/success` as soon as status switches to `SUCCESS`. |
-| **`/payment/success`** | - **SSR & Client Guard**: If status is still `PENDING`, automatically redirects user back to `/payment/pending` using `navigateTo(..., { replace: true })`.<br>- Prevents premature false success when users click *Back to Merchant* before payment. |
+| **`/checkout/[product]`** | **SPA Mode (`ssr: false`)**: Validates product from client-side content cache. Submits form to `/api/payment/create`, receives `paymentUrl`, and redirects the user (`window.location.href = res.paymentUrl`). Bypasses runtime server D1 queries. |
+| **`/payment/pending`** | **SPA Mode (`ssr: false`)**: Displays invoice summary, amount, customer name, and quantity.<br>- Shows **"Lanjutkan Pembayaran di DOKU"** link if invoice is not completed.<br>- Auto-redirects to `/payment/success` as soon as status switches to `SUCCESS`. |
+| **`/payment/success`** | **SPA Mode (`ssr: false`)**: Client & navigation guard: If status is still `PENDING`, automatically redirects user back to `/payment/pending` using `navigateTo(..., { replace: true })`.<br>- Prevents premature false success when users click *Back to Merchant* before payment. |
 | **`/payment/failed`** | Displays retry CTA and contact support buttons for failed or expired transactions. |
 | **`/test-payment`** | Isolated developer testing sandbox (`noindex`) for mock simulation and integration checks. |
+
+> [!NOTE]
+> In `server/api/payment/status.get.ts`, query actions `action=simulate_success` and `action=simulate_failed` are enforced to execute **ONLY** when `DOKU_ENVIRONMENT === "sandbox"` and request host is not `dotuquonline.com`, preventing unauthorized status spoofing on live deployments.
 
 ---
 
 ## 5. Nitro Storage (KV) Schema
 
-Transactions are stored as lightweight JSON objects in Nitro Storage (`useStorage("data")`):
+Transactions are stored in Cloudflare Workers KV via Nitro Storage driver `cloudflare-kv-binding` (binding `TRANSACTIONS` mapped in `wrangler.toml` and `nuxt.config.ts`), ensuring persistent state replication across all edge nodes:
 
 ```ts
 interface TransactionRecord {

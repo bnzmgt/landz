@@ -2,9 +2,9 @@
 
 **Project**: Landz (`dotuquonline.com`)  
 **Domain**: https://dotuquonline.com  
-**Primary Tech Stack**: Nuxt 4, Nuxt Content v3, Tailwind CSS, DaisyUI, Nitro, Cloudflare Pages/Workers, DOKU Payment Gateway  
-**Version**: 1.0.0 (Production Ready)  
-**Last Updated**: 2026-09-19  
+**Primary Tech Stack**: Nuxt 4, Nuxt Content v3, Tailwind CSS, DaisyUI, Nitro, Cloudflare Pages/Functions, DOKU Payment Gateway, Cloudflare KV, Cloudflare D1  
+**Version**: 1.1.0 (Edge-Optimized & Production Hardened)  
+**Last Updated**: 2026-10-22  
 
 ---
 
@@ -76,7 +76,8 @@
 | **Icons** | `@phosphor-icons/vue` | `^2.2.1` | Modern icon library for rich UI feedback and badges. |
 | **Server Engine** | Nitro | Built-in | Server engine generating Cloudflare Pages bundle (`_worker.js` / `dist`). |
 | **Cryptography** | Web Crypto API (`crypto.subtle`) | Native W3C | Edge-compatible SHA-256 Digest & HMAC-SHA256 signature generator. |
-| **Data Persistence** | Nitro Storage (`unstorage`) | Built-in | Key-Value transaction storage (`transactions:${invoiceNumber}`). |
+| **Data Persistence** | Nitro Storage (`unstorage`) + Cloudflare Workers KV | Built-in / Cloudflare KV | Persistent key-value transaction storage (`TRANSACTIONS` binding). |
+| **Database** | Cloudflare D1 SQL | SQLite Edge Engine | Relational SQL database binding (`DB`) for Nuxt Content build/runtime compatibility. |
 | **Payment Gateway** | DOKU Jokul Checkout API | v1 REST | Secure PCI-DSS compliant payment processing for Indonesian payment methods. |
 | **Web Scraping** | Puppeteer & Cheerio | `^24.38.0` / `^1.2.0` | Dynamic & static scraper pipeline for marketplace PDPs. |
 | **AI Content** | OpenAI API | `^6.39.1` | Automated content generation, SEO rewriting, and intent extraction. |
@@ -130,8 +131,11 @@ landz/
 │   ├── articles/                 # AI content generation & trend scrapers (OpenAI + Trends)
 │   ├── generate-sitemap.mjs      # Automatic sitemap.xml generator (runs before build)
 │   └── getz.cjs                  # Puppeteer product scraper
-├── nuxt.config.ts                # Nuxt configuration with Cloudflare Pages preset
-└── tailwind.config.js            # Tailwind styling rules & DaisyUI theme setup
+├── nuxt.config.ts                # Nuxt configuration with Cloudflare Pages preset & explicit API routing
+├── tailwind.config.js            # Tailwind styling rules & DaisyUI theme setup
+├── wrangler.toml                 # Cloudflare Pages build output dir ("dist"), D1 & KV bindings
+├── .nvmrc                        # Enforces Node.js 22 runtime in Cloudflare Build environment
+└── .node-version                 # Node version lockfile (v22) for CI/CD detection
 ```
 
 ---
@@ -172,12 +176,51 @@ During every `npm run build`, `scripts/generate-sitemap.mjs` executes automatica
    * No credentials are ever exposed in client-side bundles.
 3. **Signature Guarding on Webhooks**:
    * Every incoming DOKU callback is validated against the computed HMAC-SHA256 signature using the raw body, timestamp, and client ID. Unauthorized or forged requests receive HTTP 401 and are rejected.
+4. **Production Sandbox & Simulation Guards**:
+   * In `server/api/payment/status.get.ts`, simulated state transitions (`action=simulate_success`, `action=simulate_failed`) are restricted strictly to local/sandbox environments.
+   * Any attempt to trigger simulation on the live domain (`dotuquonline.com`) is automatically discarded.
+5. **AsyncData Key Isolation**:
+   * Unique keys are enforced on `useAsyncData` calls (e.g. `categories-index-with-count`) across different pages to prevent hydration state collision and data shape corruption during client navigation.
 
 ---
 
 ## 7. Deployment & Infrastructure
 
 * **Hosting Target**: Cloudflare Pages with Functions (`preset: "cloudflare-pages"`).
-* **Build Command**: `npm run build` (Builds sitemap + compiles Nuxt into `dist/_worker.js`).
+* **Configuration File**: `wrangler.toml` (specifies `pages_build_output_dir = "dist"` and bindings).
+* **Build Command**: `npm run build` (Executes sitemap generator + compiles Nuxt into `dist/`).
 * **Output Directory**: `dist`
-* **Node Version**: Node 20+ (Cloudflare Pages Build Environment).
+* **Node Version**: Node 22 (`.nvmrc` & `.node-version` pin to v22; required by Nuxt 4 & modern dependencies).
+* **Edge Worker Routing (`_routes.json`)**:
+  * `include: ["/api/*"]`: Only dynamic payment APIs invoke the Cloudflare Edge Worker function.
+  * All other routes (`/`, `/products/*`, `/categories/*`, `/articles/*`, `/checkout/*`, `/payment/*`) are served directly as pre-rendered static assets from Cloudflare's Worldwide CDN Edge cache (~15–50 ms latency).
+* **Active Cloudflare Bindings**:
+  * **D1 SQL Database**: `DB` -> `dotuqu-content` (`784d64b9-b956-419c-9831-68a36da73eb0`).
+  * **KV Namespace**: `TRANSACTIONS` -> `dotuqu-transactions` (`efe5294c796141ffaa7d8559787b095e`).
+
+---
+
+## 8. Cloudflare Pages & Edge Performance Optimization Audit
+
+### 8.1 The "Data Missing / 500 Server Error" Root Cause
+* **Symptom**: On initial page load or hard refresh (SSR), catalog/product data was empty (`products=0`). When navigating via client-side routing, data appeared normally.
+* **Underlying Cause**: Nuxt Content v3 in SSR mode tried to execute queries against a Cloudflare D1 database. Because the D1 database binding `DB` was missing from the Pages project or had no initialized tables, every server-side `queryCollection()` request failed with HTTP 500 (`500 Server Error`). Client-side navigation worked only because it read precomputed static dumps (`__nuxt_content/*/sql_dump.txt`).
+* **Resolution**: All 55+ catalog, category, product, and article routes are now pre-rendered into static HTML during build. Furthermore, `_routes.json` limits function execution to `/api/*`, completely eliminating runtime SSR dependency on D1 for content consumption.
+
+### 8.2 Error 8000057: `_routes.json` 100-Character Rule Limit
+* **Symptom**: Cloudflare Pages build failed during asset publication with:  
+  `Error 8000057: Rule (%s) in routes.json is over the 100 character limit.`
+* **Underlying Cause**: Nuxt/Nitro's default Pages generator attempted to enumerate every pre-rendered route into the `exclude` array of `_routes.json`. Products with long titles (e.g. 150–240 character slugs) generated entries exceeding Cloudflare's strict 100-character per-rule limit.
+* **Resolution**: Disabled automatic routes (`defaultRoutes: false`) in `nuxt.config.ts` and set a concise, explicit configuration (`include: ["/api/*"]`), keeping all routing rules under 25 characters and well within Cloudflare limits.
+
+### 8.3 Error 524: Cloudflare 90s–100s Gateway Timeout
+* **Symptom**: Requests to `dotuquonline.com` hung for ~92 seconds before Cloudflare returned `Error 524 (A timeout occurred)`.
+* **Underlying Cause**: In `@nuxt/content` v3 runtime (`database.server.js`), `waitUntilDatabaseIsReady()` contains a hardcoded `const REQUEST_TIMEOUT = 90;` loop that waits for D1 schema initialization. When the worker intercepted the homepage request (`include: ["/*"]`), it blocked for 90 seconds waiting for the empty D1 database, triggering Cloudflare's 100s gateway timeout.
+* **Resolution**:
+  1. Static-first edge routing: Only `/api/*` routes trigger worker isolates.
+  2. SPA mode for interactive routes: `/checkout/**` and `/payment/**` are configured with `ssr: false` in `routeRules`, ensuring they render client-side without calling D1 SSR routines.
+  3. Total latency dropped from **92,600 ms** to **~15–50 ms**.
+
+### 8.4 Ephemeral In-Memory Transaction Loss Resolution
+* **Symptom**: Transactions were previously stored in a memory `Map` fallback or unmounted filesystem driver, causing transaction states to vanish when worker isolates recycled.
+* **Resolution**: Configured Nitro's `data` storage driver to `cloudflare-kv-binding` linked to the persistent `TRANSACTIONS` KV namespace (`efe5294c796141ffaa7d8559787b095e`). Transaction states are globally replicated across Cloudflare edge data centers.
