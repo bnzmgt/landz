@@ -9,7 +9,9 @@ const isMock = computed(() => route.query.mock === "true");
 const { data: statusData, refresh, pending } = await useFetch(
     () => `/api/payment/status?invoice=${invoiceNumber.value}`,
     {
+        key: `payment-status-${invoiceNumber.value}`,
         immediate: Boolean(invoiceNumber.value),
+        getCachedData: () => undefined,
     }
 );
 

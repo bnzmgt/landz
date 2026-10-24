@@ -7,7 +7,9 @@ const invoiceNumber = computed(() => route.query.invoice || route.query.order_id
 const { data: statusData, refresh, pending } = await useFetch(
     () => `/api/payment/status?invoice=${invoiceNumber.value}`,
     {
+        key: `payment-status-${invoiceNumber.value}`,
         immediate: Boolean(invoiceNumber.value),
+        getCachedData: () => undefined,
     }
 );
 

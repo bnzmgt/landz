@@ -17,3 +17,7 @@ id = "efe5294c796141ffaa7d8559787b095e"
 
 [vars]
 DOKU_ENVIRONMENT = "production"
+DOKU_CLIENT_ID = "BRN-0235-1788934690111"
+DOKU_SECRET_KEY = "SK-3ILK2zplYcEPC2bna6cs"
+DOKU_CALLBACK_URL = "https://dotuquonline.com/api/payment/callback"
+DOKU_RETURN_URL = "https://dotuquonline.com/payment/pending"

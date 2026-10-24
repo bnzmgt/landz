@@ -7,7 +7,9 @@ const invoiceNumber = computed(() => route.query.invoice || "");
 const { data: statusData } = await useFetch(
     () => `/api/payment/status?invoice=${invoiceNumber.value}`,
     {
+        key: `payment-status-${invoiceNumber.value}`,
         immediate: Boolean(invoiceNumber.value),
+        getCachedData: () => undefined,
     }
 );
 
@@ -54,7 +56,7 @@ const formatCurrency = (val) => {
 
                 <div v-if="transaction?.amount" class="flex justify-between border-b border-gray-200 pb-2">
                     <span class="text-gray-500">Total Tagihan</span>
-                    <span class="font-bold" :class="isExpired ? 'text-amber-600' : 'text-red-500'">{{ formatCurrency(transaction.amount) }}</span>
+                    <span class="font-bold" :class="isExpired ? 'text-amber-600' : 'text-red-500'">{{ formatCurrency(transaction?.amount) }}</span>
                 </div>
 
                 <div class="flex justify-between">

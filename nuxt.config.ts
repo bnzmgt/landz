@@ -39,9 +39,6 @@ export default defineNuxtConfig({
                 "/",
                 "/articles",
                 "/categories",
-                "/payment/success",
-                "/payment/pending",
-                "/payment/failed",
                 ...contentRoutes("products", "/products"),
                 ...contentRoutes("categories", "/categories"),
                 ...contentRoutes("articles", "/articles"),
@@ -65,7 +62,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         dokuClientId: process.env.DOKU_CLIENT_ID || "",
         dokuSecretKey: process.env.DOKU_SECRET_KEY || "",
-        dokuEnvironment: process.env.DOKU_ENVIRONMENT || "sandbox",
+        dokuEnvironment: process.env.DOKU_ENVIRONMENT || "production",
         dokuCallbackUrl: process.env.DOKU_CALLBACK_URL || "",
         dokuReturnUrl: process.env.DOKU_RETURN_URL || "",
         public: {
@@ -74,7 +71,7 @@ export default defineNuxtConfig({
     },
 
     experimental: {
-        payloadExtraction: true,
+        payloadExtraction: false,
     },
 
     routeRules: {
